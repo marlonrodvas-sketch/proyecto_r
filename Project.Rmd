@@ -81,17 +81,23 @@ proyectoInovacion <- proyectoInovacion %>%
 # Presupuesto promedio por país y área tecnológica
 presupuesto_pais_area <- proyectoInovacion %>%
   group_by(pais, area_tecnologica) %>%
-  summarize(presupuesto_promedio = mean(presupuesto_usd, na.rm = TRUE), .groups = 'drop')
+  summarize(presupuesto_promedio = mean(presupuesto_usd))
+
+presupuesto_pais_area 
 
 # Número de proyectos por año
 proyectos_por_anio <- proyectoInovacion %>%
   group_by(anio_inicio) %>%
-  summarize(total_proyectos = n(), .groups = 'drop')
+  summarize(proyectos_totales= sum(presupuesto_usd > 0))
 
+proyectos_por_anio
+  
 # Productividad promedio por área tecnológica y nivel de impacto
 productividad_area_impacto <- proyectoInovacion %>%
   group_by(area_tecnologica, impacto) %>%
-  summarize(productividad_promedio = mean(productividad, na.rm = TRUE), .groups = 'drop')
+  summarize(productividad_promedio = mean(productividad))
+
+productividad_area_impacto 
 
 # generar rankings utilizando arrange(desc(variable))
 
@@ -103,7 +109,7 @@ top_10_eficiencia <- proyectoInovacion %>%
 # Top 5 países con mayor productividad promedio
 top_5_paises_productividad <- proyectoInovacion %>%
   group_by(pais) %>%
-  summarize(prod_promedio_pais = mean(productividad, na.rm = TRUE)) %>%
+  summarize(prod_promedio_pais = mean(productividad)) %>%
   arrange(desc(prod_promedio_pais)) %>%
   head(5)
 
