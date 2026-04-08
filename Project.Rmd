@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
+
 #Carga de archivos
 ```{r}
 proyectoInovacion = read_csv('proyectos_innovacion.csv')
@@ -67,6 +68,7 @@ indicadoresAreaDf <- bind_rows(listaIndicadores)
 
 ```
 
+
 ```{r}
 #nuevas variables utilizando mutate
 proyectoInovacion <- proyectoInovacion %>%
@@ -115,4 +117,3 @@ top_5_paises_productividad
 listaProyecto$dataframeOriginal <- proyectoInovacion
 
 ```
-
