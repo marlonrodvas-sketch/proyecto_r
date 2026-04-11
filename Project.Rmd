@@ -139,3 +139,37 @@ top_5_paises_productividad
 listaProyecto$dataframeOriginal <- proyectoInovacion
 
 ```
+#Parte IV
+```{r}
+
+indicadoresPorPais <- proyectoInovacion %>%
+  group_by(pais) %>%
+  summarize(
+    numero_proyectos = length(presupuesto_usd),
+    presupuesto_promedio = mean(presupuesto_usd)
+  )
+
+indicadoresPorPais
+
+##Integrar los datasets
+datosIntegrados <- indicadoresPorPais %>% 
+  inner_join(paisesPib, by = "pais")
+datosIntegrados
+
+#
+datosIntegrados <- datosIntegrados %>%
+  mutate(
+    proyectos_por_millon_pib = numero_proyectos / pib_millones,
+    presupuesto_relativo = presupuesto_promedio / pib_millones
+  )
+
+paisesMayorInversion <- datosIntegrados %>%
+  arrange(desc(presupuesto_relativo))
+
+paisesMenorEficiencia <- datosIntegrados %>%
+  arrange(desc(proyectos_por_millon_pib))
+
+head(paisesMayorInversion)
+head(paisesMenorEficiencia)
+```
+
