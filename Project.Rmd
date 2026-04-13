@@ -197,16 +197,19 @@ clasificar_proyecto <- function(impacto, presupuesto, productividad) {
   }
 }
 
-# Se Vectoriza la función para que R pueda aplicarla a todas las filas a la vez
-evaluar_vectorizado <- Vectorize(clasificar_proyecto)
-
-# Aplicamos la función al dataframe
+# Se aplica mapply dentro de mutate
 proyectoInovacion <- proyectoInovacion %>%
   mutate(
-    categoria_proyecto = evaluar_vectorizado(impacto, presupuesto_usd, productividad)
+    categoria_proyecto = mapply(
+      clasificar_proyecto, 
+      impacto, 
+      presupuesto_usd, 
+      productividad
+    )
   )
 
-# Mostramos el resultado de la nueva clasificación
+
+# Se muestra el resultado de la nueva clasificación
 proyectoInovacion %>% 
   select(pais, area_tecnologica, impacto, presupuesto_usd, productividad, categoria_proyecto) %>% 
   head(10)
@@ -214,3 +217,4 @@ proyectoInovacion %>%
 
 
 ```
+
