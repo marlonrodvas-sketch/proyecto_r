@@ -171,5 +171,50 @@ paisesMenorEficiencia <- datosIntegrados %>%
 
 head(paisesMayorInversion)
 head(paisesMenorEficiencia)
+
+```
+
+#Parte V
+```{r}
+# Funcion que evalua impacto - presupuesto - productividad
+clasificar_proyecto <- function(impacto, presupuesto, productividad) {
+  
+  # Regla 1: Alto impacto y alta productividad
+  if (impacto == "Alto" && productividad >= 1.5) {
+    return("Proyecto estratégico")
+    
+  # Regla 2: Alto presupuesto y baja productividad
+  } else if (presupuesto > 1000000 && productividad < 0.75) {
+    return("Riesgo de ineficiencia")
+    
+  # Regla 3: Productividad media (entre 0.75 y 1.5)
+  } else if (productividad >= 0.75 && productividad < 1.5) {
+    return("Proyecto estándar")
+    
+  # Regla 4: Resto
+  } else {
+    return("Proyecto emergente")
+  }
+}
+
+# Se aplica mapply dentro de mutate
+proyectoInovacion <- proyectoInovacion %>%
+  mutate(
+    categoria_proyecto = mapply(
+      clasificar_proyecto, 
+      impacto, 
+      presupuesto_usd, 
+      productividad
+    )
+  )
+
+
+# Se muestra el resultado de la nueva clasificación
+proyectoInovacion %>% 
+  select(pais, area_tecnologica, impacto, presupuesto_usd, productividad, categoria_proyecto) %>% 
+  head(10)
+
+
+
 ```
 
