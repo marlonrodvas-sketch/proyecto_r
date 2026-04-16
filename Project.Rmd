@@ -265,23 +265,23 @@ desv_eficiencia <- sd(proyectoInovacion$indice_resultados)
 umbral_sobresaliente <- media_eficiencia + (2 * desv_eficiencia)
 
 #Inicializar variables para el ciclo WHILE
-proyectos_sobresalientes <- c() # Vector para almacenar IDs
-i <- 1                          # Contador
-n <- nrow(proyectoInovacion)    # Total de registros
+proyectos_sobresalientes <- c() 
+i <- 1                          
+n <- nrow(proyectoInovacion)    
 
-#Ciclo WHILE - Búsqueda iterativa
+#WHILE 
 while (i <= n) {
   
-  # Extraer la eficiencia del proyecto actual
+  # Extrae la eficiencia del proyecto actual
   eficiencia_actual <- proyectoInovacion$indice_resultados[i]
   
-  # Validar si supera el umbral
+  # Valida si supera el umbral
   if (!is.na(eficiencia_actual) && eficiencia_actual > umbral_sobresaliente) {
-    # Almacenar el identificador 
+    # Almacena el identificador 
     proyectos_sobresalientes <- c(proyectos_sobresalientes, proyectoInovacion$id_proyecto[i])
   }
   
-  # Incrementar contador
+  # Incrementa contador
   i <- i + 1
 }
 
