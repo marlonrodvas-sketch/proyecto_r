@@ -145,7 +145,7 @@ listaProyecto$dataframeOriginal <- proyectoInovacion
 indicadoresPorPais <- proyectoInovacion %>%
   group_by(pais) %>%
   summarize(
-    numero_proyectos = length(presupuesto_usd),
+    numeroProyectos = length(presupuesto_usd),
     presupuesto_promedio = mean(presupuesto_usd)
   )
 
@@ -159,7 +159,7 @@ datosIntegrados
 #
 datosIntegrados <- datosIntegrados %>%
   mutate(
-    proyectos_por_millon_pib = numero_proyectos / pib_millones,
+    proyectos_por_millon_pib = numeroProyectos / pib_millones,
     presupuesto_relativo = presupuesto_promedio / pib_millones
   )
 
@@ -214,7 +214,47 @@ proyectoInovacion %>%
   select(pais, area_tecnologica, impacto, presupuesto_usd, productividad, categoria_proyecto) %>% 
   head(10)
 
+```
+##Parte VI
+```{r}
 
+lista_paises <- listaPaises$pais
+
+indicadoresPorPaisFor <- data.frame(
+  paisDf = character(),
+  numeroProyectosDf = integer(),
+  presupuestoTotalDf = numeric(),
+  promedioPublicacionesDf = numeric(),
+  eficienciaPromedioDf = numeric()
+)
+
+for (pais in lista_paises) {
+  
+  # Subconjunto por país
+  dfPais <- proyectoInovacion %>%
+    filter(pais == pais)
+  
+  # Cálculo de indicadores
+  numeroProyectos <- nrow(dfPais)
+  
+  presupuestoTotal <- sum(dfPais$presupuesto_usd)
+  
+  promedioPublicaciones <- mean(dfPais$publicaciones)
+  
+  eficienciaPromedio <- mean(dfPais$indice_resultados)
+  
+  # Agregar fila al dataframe
+  indicadoresPorPaisFor <- rbind(
+    indicadoresPorPaisFor,
+    data.frame(
+      paisDf = pais,
+      numeroProyectosDf = numeroProyectos,
+      presupuestoTotalDf = presupuestoTotal,
+      promedioPublicacionesDf = promedioPublicaciones,
+      eficienciaPromedioDf = eficienciaPromedio
+    )
+  )
+}
 
 ```
 #Parte VI - while
