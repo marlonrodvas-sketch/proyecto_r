@@ -257,6 +257,125 @@ for (pais in lista_paises) {
 }
 
 ```
+#Parte VI - while
+```{r}
+#Calcular métricas para el umbral
+media_eficiencia <- mean(proyectoInovacion$indice_resultados)
+desv_eficiencia <- sd(proyectoInovacion$indice_resultados)
+umbral_sobresaliente <- media_eficiencia + (2 * desv_eficiencia)
+
+#Inicializar variables para el ciclo WHILE
+proyectos_sobresalientes <- c() 
+i <- 1                          
+n <- nrow(proyectoInovacion)    
+
+#WHILE 
+while (i <= n) {
+  
+  # Extrae la eficiencia del proyecto actual
+  eficiencia_actual <- proyectoInovacion$indice_resultados[i]
+  
+  # Valida si supera el umbral
+  if (!is.na(eficiencia_actual) && eficiencia_actual > umbral_sobresaliente) {
+    # Almacena el identificador 
+    proyectos_sobresalientes <- c(proyectos_sobresalientes, proyectoInovacion$id_proyecto[i])
+  }
+  
+  # Incrementa contador
+  i <- i + 1
+}
+
+#Identificador de los proyectos sobresalientes
+print(proyectos_sobresalientes)
+
+# Detalle de estos proyectos
+detalle_sobresalientes <- proyectoInovacion %>% 
+  filter(id_proyecto %in% proyectos_sobresalientes)
+
+head(detalle_sobresalientes)
+```
+
+#Parte VII
+```{r}
+
+#Función 1: Calcular índice de eficiencia del proyecto
+
+# función que calcula la eficiencia para cada proyecto
+fn_calculo_eficiencia <- function(pub, pat, pres) {
+  return((pub + pat) / pres)
+}
+
+# Usamos mutate junto con lapply
+# lapply devuelve una lista, por eso usamos unlist() para 
+# que se convierta en una columna (vector) de nuestro dataframe.
+proyectoInovacion <- proyectoInovacion %>%
+  mutate(
+    eficiencia_proyecto = unlist(lapply(1:n(), function(i) {
+      fn_calculo_eficiencia(publicaciones[i], patentes[i], presupuesto_usd[i])
+    }))
+  )
+
+# Mostramos las 3 variables y el id del proyecto mas la eficiencia calculada del proyecto
+proyectoInovacion %>% 
+  select(id_proyecto, publicaciones, patentes, presupuesto_usd, eficiencia_proyecto) %>% 
+  head(10)
+
+
+#Función 2: Identificar proyectos con alto impacto
+
+# Recibe un dataframe y devuelve solo IDs y Categoría de los proyectos de Alto Impacto
+identificar_proyectos_impacto <- function(df) {
+  
+  # ac solo los de alto impacto
+  df_filtrado <- df %>%
+    filter(impacto == "Alto") %>%
+    #solo id_proyecto y la categoria del proyecto
+    select(id_proyecto, categoria_proyecto)
+  
+  return(df_filtrado)
+}
+
+# le pasamos el df 
+resultado_alto_impacto <- lapply(list(proyectoInovacion), identificar_proyectos_impacto)
+
+# extraemos el df que tiene la lista
+df_alto_impacto_final <- resultado_alto_impacto[[1]]
+
+# vemos los proyectos con alto impacto
+print("Listado de Proyectos de Alto Impacto:")
+print(df_alto_impacto_final)
+
+
+# Función 3: Generar resumen estadístico 
+# Recibe un dataframe y el nombre de la columna para analizar
+generar_resumen_estadistico <- function(df, columna) {
+  datos <- df[[columna]]
+  
+  resumen <- list(
+    variable = columna,
+    media = mean(datos),
+    mediana = median(datos),
+    desviacion_estandar = sd(datos),
+    percentiles = quantile(datos, probs = c(0.25, 0.5, 0.75, 0.9))
+  )
+  return(resumen)
+}
+
+# Resumen estadístico del presupuesto 
+resumen_de_variable <- lapply(list(proyectoInovacion), function(df) {
+  generar_resumen_estadistico(df, "presupuesto_usd")
+})
+
+df_resumen_de_variable <- resumen_de_variable[[1]]
+
+print("Resumen Estadístico de la variable:")
+print(df_resumen_de_variable)
+
+
+
+```
+
+
 
 #Parte VIII
 ```{r}
