@@ -295,3 +295,41 @@ detalle_sobresalientes <- proyectoInovacion %>%
 head(detalle_sobresalientes)
 ```
 
+#Parte VIII
+```{r}
+
+ggplot(proyectoInovacion, aes(x = presupuesto_usd)) +
+  geom_histogram(
+    binwidth = 100000,
+    fill = "steelblue",
+    color = "white"
+  ) +
+  labs(
+    title = "Distribución del presupuesto de proyectos",
+    x = "Presupuesto (USD)",
+    y = "Frecuencia"
+  ) +
+  theme_minimal()
+
+ggplot(proyectoInovacion, aes(x = presupuesto_usd, y = publicaciones)) +
+  geom_point(alpha = 0.6, color = "darkgreen") +
+  labs(
+    title = "Relación entre presupuesto y publicaciones",
+    x = "Presupuesto (USD)",
+    y = "Número de publicaciones"
+  ) +
+  theme_minimal()
+
+ggplot(proyectoInovacion, aes(x = area_tecnologica, y = presupuesto_usd)) +
+  geom_boxplot(fill = "orange", alpha = 0.7) +
+  labs(
+    title = "Distribución del presupuesto por área tecnológica",
+    x = "Área tecnológica",
+    y = "Presupuesto (USD)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
