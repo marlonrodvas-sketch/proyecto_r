@@ -1,3 +1,10 @@
+---
+title: "Proyecto"
+output: html_notebook
+Nombre_Estudiante: "Marlon Estuardo Rodríguez Vásquez"
+---
+
+
 #Inclusion de librerias
 ```{r}
 library(tidyverse)
@@ -411,6 +418,101 @@ ggplot(proyectoInovacion, aes(x = area_tecnologica, y = presupuesto_usd)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+#Parte IX
+```{r}
+
+#¿Qué áreas tecnológicas reciben mayor financiamiento?
+
+
+mayor_financiamiento<-proyectoInovacion %>%
+  group_by(area_tecnologica) %>%
+  summarize(financiamiento= sum(presupuesto_usd)) %>%
+  arrange(desc(financiamiento))
+
+mayor_financiamiento
+
+#areas tecnologicas ordenas de mayor a menor
+#area_tecnologica         financiamiento
+#Agrotecnologia             68127471			
+#Ciberseguridad             67395860			
+#Biotecnologia	            62584589			
+#Salud Digital	            60987706			
+#Inteligencia Artificial	  51087439			
+#Nanotecnologia	            46277278			
+#Energia Renovable	        38058983	
+
+#¿Existe relación entre presupuesto y resultados?
+
+relacion_presupuesto_resultados<-proyectoInovacion %>%
+  group_by(area_tecnologica) %>%
+  summarize(presupuesto=mean(presupuesto_usd), resultados=mean(indice_resultados)) %>%
+  arrange(desc(resultados))
+  
+relacion_presupuesto_resultados
+
+#Viendo la tabla, si existe una relación lineal de presupuestos con resultados, pero es una relación inversa, entre mas presupuesto menor resultados y viceversa
+
+#area_tecnologica           presupuesto           resultados
+#Energia Renovable	        845755.2	            1.810391e-05		
+#Nanotecnologia	            964110.0	            1.594650e-05		
+#Ciberseguridad	            949237.5	            1.433972e-05		
+#Inteligencia Artificial	  880817.9	            1.287092e-05		
+#Biotecnologia	            1060755.7	            1.244508e-05		
+#Agrotecnologia	            1064491.7	            1.216954e-05		
+#Salud Digital	            1108867.4	            9.845448e-06	
+
+#¿Qué países presentan mayor productividad?
+paises_productividad<- proyectoInovacion %>%
+  group_by(pais) %>%
+  summarize(productividad=mean(eficiencia_proyecto)) %>%
+  arrange(desc(productividad))
+
+paises_productividad
+
+#paises con mayor productividad ordenas de mayor a menor
+#pais                  productividad
+#Colombia	            1.653330e-05			
+#Panama	              1.618713e-05			
+#Costa Rica	          1.366013e-05			
+#Mexico	              1.338068e-05			
+#Guatemala	          1.295534e-05			
+#Peru	                1.145801e-05			
+#Bolivia	            1.083629e-05			
+#Uruguay	            9.586294e-06			
+#Argentina	          9.466890e-06			
+#Chile	              8.663492e-06
+#Ecuador	            8.615763e-06			
+#Paraguay	            7.999389e-06	
+
+
+#¿Se identifican proyectos atípicos?
+proyectos_atipicos<- proyectoInovacion %>%
+  group_by(area_tecnologica) %>%
+  summarize(presupuesto=mean(presupuesto_usd), 
+            resultados=mean(indice_resultados),
+            eficiencia= mean(eficiencia_proyecto)
+            ) %>%
+  arrange(desc(presupuesto))
+
+proyectos_atipicos
+
+#Se podria decir que los proyectos atipicos serian Energia renovable porque no es como los demas de a menos dinero, menos resultado, si no que es muy eficiente.
+#Y también Salud digital porque tiene el presupuesto mas alto pero su resultado es muy bajo a comparación de los que si tienen presupuesto alto
+#area_tecnologica          presupuesto   resultados    eficiencia 
+#Salud Digital	            1108867.4	    9.845448e-06	8.550196e-06	
+#Agrotecnologia	          1064491.7	    1.216954e-05	1.025525e-05	
+#Biotecnologia	            1060755.7	    1.244508e-05	1.116466e-05	
+#Nanotecnologia	          964110.0	    1.594650e-05	1.439794e-05	
+#Ciberseguridad	          949237.5	    1.433972e-05	1.218313e-05	
+#Inteligencia Artificial	  880817.9	    1.287092e-05	1.155476e-05	
+#Energia Renovable	        845755.2	    1.810391e-05	1.620743e-05
+
+proyectoInovacion
+
+
 
 
 ```
